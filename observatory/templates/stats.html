@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block body %}
+  <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/page.stats.js') }}"></script>
+
+  <div class="row stats-row">
+    {% for stat in countStats %}
+      <div class="count-stat text-center span2 {% if loop.first %} offset3 {% endif %}">
+        <h3>{{stat.count}}</h3>
+        {{stat.name}}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="row stats-row">
+    <div class="span3 offset2 donut-span">
+      <canvas id="top-10-perms-chart" width="300" height="300"></canvas>
+      <script>
+        var context = $("#top-10-perms-chart")
+                        .get(0)
+                        .getContext("2d");
+        var data = [
+          {% for s in top10Perms %}
+            {color: "{{ loop.index0 | index2permgradient }}", value:{{ s.count }}},
+          {% endfor %}
+        ];
+
+        var top10PermsChart = new Chart(context).Doughnut(data, {});
+      </script>
+
+    </div>
+
+    <div class="span4">
+      <h4 class="donut-legend-header">Top 10 Requested Permissions</h4>
+      <ul class="plain-list donut-legend-ul">
+      {% for s in top10Perms %}
+        <li class="donut-legend-li">
+          <span class="donut-label" style="background-color: {{ loop.index0 | index2permgradient }}">
+          </span>
+          {{ s.name | formatPermissionStr }} 
+          <span class="donut-legend-secondary muted">{{ s.count }} apps</span>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="row stats-row">
+    <div class="span3 offset2 donut-span">
+      <canvas id="keydata-chart" width="300" height="300"></canvas>
+      <script>
+        var context = $("#keydata-chart")
+                        .get(0)
+                        .getContext("2d");
+
+        var data = [
+          {% for s in keyStats %}
+          { color: "{{ loop.index0 | index2keygradient }}", value:{{ s.certcount }}},
+          {% endfor %}
+          { color: "#3FD1A0", value: {{ otherKeys }} },
+        ];
+
+        var keyDataChart = new Chart(context).Doughnut(data, {});
+      </script>
+    </div>
+
+    <div class="span4">
+      <h4 class="donut-legend-header">Top 5 Signing Certificate Key Types</h4>
+      <ul class="plain-list donut-legend-ul">
+        {% for s in keyStats %}
+        <li class="donut-legend-li">
+        <span class="donut-label" style="background-color: {{ loop.index0 | index2keygradient}}"></span>
+          {{ s.keybits }} bit {{ s.algo }}
+          <span class="donut-legend-secondary muted">{{ s.certcount }} certs</span>
+        </li>
+        {% endfor %}
+        <li class="donut-legend-li">
+        <span class="donut-label" style="background-color: #3FD1A0"></span>
+          Other
+          <span class="donut-legend-secondary muted">{{ otherKeys }} certs</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

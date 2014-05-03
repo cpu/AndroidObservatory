@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block body %}
+  <style>
+  .faq li {
+    margin-bottom: 1em;
+  }
+
+   span.question {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-bottom: 1em;
+  }
+  </style>
+  <div class="row">
+    <div class="span6 offset3 well">
+      <h3>Frequently Asked Questions</h3>
+
+      <div class="faq">
+        <ol>
+          <li>
+            <span class="question">What is the <i>Universal App. ID</i> and why is it needed?</span><br/><br/>
+            <span class="answer">
+              The <i>Universal App. ID</i> is a way to uniquely identify an application across different APK sources (i.e. the Google Play store, the Amazon app store, etc.) and application versions. The universal app ID (or <i>UAppID</i> for short) is composed of the application package name (unique per device) and the fingerprint of each certificate used to sign the application. This information is static across releases (not influenced by version/functionality increments) and ties together a package and developer (who holds the private keys corresponding to the certificates).<br/><br/>
+              The observatory relies on the UAppID because we poll APK submissions from multiple sources. We wish to build relationships between packages released by the same developer, despite where we source the APK file from.
+            </span>
+          </li>
+          <li>
+            <span class="question">How can I easily check if an APK is already in the Observatory?</span><br/><br/>
+            <span class="answer">
+              On a Linux machine with a BASH shell, try adding the following function to your <code>~/.bashrc</code>: <br/><br/>
+              <code>function observatoryOpen { xdg-open https://www.androidobservatory.org/apk/$(shasum $1 | cut -d' ' -f1); }</code><br/><br/>
+              This will allow you to run <code>observatoryOpen ~/Downloads/some.app.sample.apk</code> and have the corresponding Observatory app page (if it exists) open in your default web browser.<br/><br/>
+              If the application isn't in the Observatory consider <a href="{{ url_for('upload') }}">contributing a sample yourself</a>!
+            </span>
+          </li>
+          <li>
+            <span class="question">How can I easily contribute multiple APKs to the observatory at once?</span><br/><br/>
+            <span class="answer">Currently APKs can only be uploaded one-by-one. We plan to implement a <i>bulk upload</i> feature in the near future, stay tuned!<br/><br/>
+              In the meantime if you have a large collection of APKs you wish to have added to the observatory please send an email to <strong>observatory (àŧ) ccsl.carleton.ca</strong> or contact us via Twitter at <a href="https://twitter.com/androidobs">@AndroidObs</a>. We'll work with you to get your APK collection imported as painlessly as possible!</span>
+          </li>
+          <li>
+            <span class="question">What does the "<i>Other sources</i>" listing on an application page mean?</span><br/><br/>
+            <span class="answer">The <i>Other sources</i> section of the application details page lists other APKs we have found with a matching <i>UAppID</i> that were collected from a different APK source. For instance, if you're viewing the application details for a copy of the <a href="https://androidobservatory.org/app/E83B9791A692A9EDF291C8FFF0FAABF750163325">Gmail</a> app that was loaded from an APK imported from the Google Play market, the <i>Other Sources</i> section would include a link to the Gmail app with the same UAppID that was <a href="https://www.androidobservatory.org/app/A8B5A21BC5A622DDEF8F1ECE599AE6DA62A7722C">loaded from an APK</a> a user submitted.</span>
+          </li>
+          <li>
+            <span class="question">I've contributed an APK but it still isn't listed in the Observatory results. What do I do?</span><br/><br/>
+            <span class="answer">
+              On rare occasions our import process is not able to handle an APK. In the event this occurs please contact us at <strong>observatory (àŧ) ccsl.carleton.ca</strong> and include a copy of the broken APK. We will work to address the issue and ensure the APK gets included in the observatory database.</span>
+          </li>
+          <li>
+            <span class="question">I want to run more advanced queries/find relationships not publicly displayed, what can I do?</span><br/><br/>
+            <span class="answer">
+              We are open to sharing the SQLite3 database of parsed Metadata with any researchers that contact us expressing interest. Please send an email request to <strong>observatory (àŧ) ccsl.carleton.ca</strong>.
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

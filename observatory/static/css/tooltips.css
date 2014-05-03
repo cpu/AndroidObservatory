@@ -1,0 +1,26 @@
+ /* tooltip styling */
+  .tooltip {
+    display:none;
+    background:#EEE;
+    height:120px;
+    padding:40px 30px 10px 30px;
+    width:500px;
+    color:#777;
+
+    border:1px solid black;
+
+    font-size:14px;
+    margin-bottom: 2em;
+  }
+
+  .hash {
+    padding-left: 60px;
+    padding-right: 60px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: white;
+  }
+
+  .tooltip-trigger {
+    cursor:help
+  }

@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% block body %}
+  <script src="{{ url_for('static', filename='js/jquery.als-1.2.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/page.app_search.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+
+  <div class="row" id='search_pane'>
+    <div class="span12">
+      <form class="well form-search" action="{{ url_for('app_search') }}" method="POST">
+        <fieldset>
+
+          <legend class="form-search-legend">Search the database:</legend>
+
+          <div class="input-append">
+            <input type="text" class="search-query span10" name="q" value="{{query or ""}}">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+
+          <div class="form-search-radio-group">
+            {% for key, str in searchTypes.iteritems() %}
+              <label class="radio inline">
+                <input type="radio" name="searchby" value="{{ key }}" {% if searchBy == key %} checked {% endif %} />
+                &nbsp;By {{ str }}
+              </label>
+            {% endfor %}
+          </div>
+
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  {% if query %}
+  <div class="alert alert-success">
+    <a class="close">×</a>
+    Your query returned <strong>{{ apps|length }}</strong> results.
+  </div>
+  {% endif %}
+
+  {% if apps %}
+    <div class="span12 well">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>&nbsp;</th><th>Name</th><th>Package</th><th>Version Code</th><th>Added</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for app in apps %}
+          <tr>
+            <td style="background-color: {{ app.source|src2colour }};">
+              &nbsp;
+            </td>
+            <td>
+              <a href="{{ url_for('app_details', app_id=app.id) }}">
+                {{ app.appname }}
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for("app_search", searchby='pkg', q=app.pkgname) }}">
+                {{ app.pkgname }}
+              </a>
+            </td>
+            <td>{{ app.versionCode }}</td>
+            <td>{{ app.timestamp|todate }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+
+  <div class="row-fluid">
+    <div class="span6">
+
+      <div class="row-fluid">
+        <h4 class="text-center">Recent Submissions</h4>
+      </div>
+
+      <div class="row-fluid">
+        <div class="als-container als-applist" id="recent-list">
+          <div class="als-viewport">
+            <ul class="als-wrapper">
+              {% for app in newApps %}
+              <li class="als-item row-fluid text-center">
+                    <a href="{{ url_for('app_details', app_id=app.id) }}">
+                      <b>{{ app.appname|trim }}</b>
+                    </a>
+                    <small>v.{{ app.version|trim(12) }}</small><br/>
+                    <small>updated {{ app.timestamp|todate }}</small>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <h4 class="text-center">Random Application Sample</h4>
+      </div>
+
+      <div class="row-fluid">
+        <div class="als-container als-applist" id="random-list">
+          <div class="als-viewport">
+            <ul class="als-wrapper">
+              {% for app in rndApps %}
+              <li class="als-item row-fluid text-center">
+                    <a href="{{ url_for('app_details', app_id=app.id) }}">
+                      <b>{{ app.appname|trim }}</b>
+                    </a>
+                    <small>v.{{ app.version|trim(12) }}</small><br/>
+                    <small>updated {{ app.timestamp|todate }}</small>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="span6">
+      <h4 class="text-center">Application Sources</h4>
+      <div class="text-center">
+        <canvas id="myChart" width="300" height="300"></canvas>
+        <script>
+          var ctx = $("#myChart").get(0).getContext("2d");
+
+          var data = [
+            {% for s in sources %}
+            {
+              value : {{ s.count }},
+              color : "{{ s.source|src2colour }}"
+            },
+            {% endfor %}
+          ];
+
+          var options = { };
+
+          var myNewChart = new Chart(ctx).Doughnut(data,options);
+
+        </script>
+      </div>
+      <br/>
+      {% for s in sources %}
+      <div style="width:30%; padding-left: 1em; float:left">
+        <span style="padding-left:0.3em; padding-right:0.3em; background-color: {{ s.source|src2colour }};">&nbsp;</span>
+        <span style="margin:0.4em;">{{ s.source|src2str }} : {{ s.count }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+  {% endif %}
+  </div>
+
+{% endblock %}

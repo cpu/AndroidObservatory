@@ -1,0 +1,126 @@
+
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+	font-family: 'Droid Sans', sans-serif;
+}
+
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+.navbar {
+	font-family: 'Droid Sans', sans-serif; 
+}
+
+h1, h2, h3, h4, h5, h6, legend, input, button, select, textarea
+{
+	font-family: 'Droid Sans', sans-serif;
+}
+
+.content-container
+{
+	margin-top: 2em;
+}
+
+.form-search-legend {
+	margin-bottom: 0;
+}
+
+.form-search-radio-group {
+	margin-left: 20px;
+}
+
+.als-container {
+	position: relative;
+	width: 100%;
+	margin: 0px auto;
+	z-index: 0;
+	padding: 0px;
+}
+
+.als-viewport {
+	position: relative;
+	overflow: hidden;
+	margin: 0px auto;
+}
+
+.als-wrapper {
+	position: relative;
+	/* if you are using a list with <ul> <li> */
+	list-style: none;
+	margin: 0px auto;
+}
+
+.als-item {
+	/* min-width: 500px; */
+	position: relative;
+	/*display: block;*/
+	/*text-align: center;*/
+	cursor: pointer;
+	float: left;
+	width: 100%;
+	margin: 0px auto;
+  padding: 8px 0;
+}
+
+.als-prev, .als-next {
+	cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.count-stat h3{
+  color: #222;
+  margin-bottom: 2px;
+}
+
+.als-applist {
+  padding-bottom: 15px;
+}
+
+.als-applist h4 {
+  padding-bottom: 15px;
+}
+
+.stats-row {
+  padding-top: 2em;
+  padding-bottom: 3em;
+}
+
+.donut-label{
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  border-radius: 0.5em;
+  vertical-align: middle;
+}
+
+.plain-list {
+  list-style-type: none;
+}
+
+.donut-span {
+  min-width: 300px;
+  text-align: center;
+}
+
+.donut-legend-header {
+  padding-left: 1em;
+  text-align: center;
+  font-size: 1.3em;
+}
+
+.donut-legend-li {
+  padding: 0.2em 0;
+}
+
+.donut-legend-secondary {
+  margin-left: 0.5em;
+  font-size: 85%;
+}
+

@@ -1,0 +1,4 @@
+# Ensure that the non-python content of the observatory Flask module
+# is included in packaged versions of the observatory code.
+recursive-include observatory/templates *
+recursive-include observatory/static *

@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block body %}
+  <style>
+    .certtable {
+      word-wrap: break-word;
+      width: 100%;
+      table-layout: fixed;
+    }
+    .certtable th {
+      width: 20%;
+    }
+  </style>
+
+  <div class="row well">
+    <div class="span6">
+    {% if cert %}
+      <h4>Certificate:</h4>
+
+      <table class="table certtable">
+        <tr>
+          <th>Fingerprint</th>
+          <td>
+            <code>{{ cert.fingerprint|colonhex }}</code>
+          </td>
+        </tr>
+        <tr>
+          <th>Serial</th>
+          <td><code>{{ cert.serial }}</code></td>
+        </tr>
+        <tr>
+          <th>x509 Issuer</th><td>{{ cert.issuer }}</td>
+        </tr>
+        <tr>
+          <th>X509 Subject</th><td>{{ cert.subject }}</td>
+        </tr>
+        <tr>
+          <th>Start Date</th><td>{{ cert.notBefore|todate }}</td>
+        </tr>
+        <tr>
+          <th>End Date</th><td>{{ cert.notAfter|todate }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="span5">
+      <h4>Public Key:</h4>
+
+      <table class="table certtable">
+        <tr>
+          <th>Algorithm</th>
+          <td>{{ pubkey.algo }}</td>
+        </tr>
+        <tr>
+          <th>Key Size (bits)</th>
+          <td>{{ pubkey.keybits }}</td>
+        </tr>
+        {% if pubkey.algo == "RSA": %}
+          <tr>
+            <th>Modulus</th>
+            <td>
+              <code>{{ pubkey.modulus }}</code>
+            </td>
+          </tr>
+          <tr>
+            <th>Exponent</th>
+            <td>
+              <code>{{ pubkey.exponent }}</code>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <th>Group Size (bits)</th>
+            <td>
+              <code>
+                {{ pubkey.groupbits }}
+              </code>
+            </td>
+          </tr>
+          <tr>
+            <th>Pub</th>
+            <td>
+              <code>{{ pubkey.pub }}</code>
+            </td>
+          </tr>
+          <tr>
+            <th>P</th>
+            <td>
+              <code>{{ pubkey.p }}</code>
+            </td>
+          </tr>
+          <tr>
+            <th>Q</th>
+            <td>
+              <code> {{ pubkey.q }}</code>
+            </td>
+          </tr>
+          <tr>
+            <th>G</th>
+            <td>
+              <code>{{ pubkey.q }}</code>
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+
+  <div class="row well">
+    <div class="span10">
+      <h4>Apps signed by this certificate:</h4>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>&nbsp;</th><th>Name</th><th>Package</th><th>Version Code</th><th>Added</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if not apps %}
+          <tr>
+            <td colspan="4">
+              Certificate not used to sign any applications
+            </td>
+          </tr>
+          {% endif %}
+
+          {% for app in apps %}
+          <tr>
+            <td style="background-color: {{ app.source|src2colour }};">
+              &nbsp;
+            </td>
+            <td>
+              <a href="{{ url_for('app_details', app_id=app.id) }}">
+                {{ app.appname }}
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for("app_search", searchby='pkg', q=app.pkgname) }}">
+                {{ app.pkgname }}
+              </a>
+            </td>
+            <td>{{ app.versionCode }}</td>
+            <td>{{ app.timestamp|todate }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <h4>No certificate found matching your query.</h4>
+    {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

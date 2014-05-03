@@ -1,0 +1,7 @@
+
+# Hack the observatory app dir into the Python module path
+import sys
+sys.path.insert(0, '/var/www/observatory')
+
+# Import our app to the WSGI instance
+from observatory import app as application

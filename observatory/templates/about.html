@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <div class="row">
+    <div class="span6 offset3 well">
+     <h3>About the Observatory</h3>
+     <p>The Android Observatory is a web interface to a large repository of Android applications. It allows users to search or browse through thousands of Android apps and retrieve metadata for those apps. Details about how the Android Observatory was built, along with a few use cases can be found in our <a href="http://www.ccsl.carleton.ca/~dbarrera/files/spsm12-barrera.pdf">research paper</a>.</p>
+
+      <h4>Database Download</h4>
+      <p>If you would like a copy of the SQLite database, use the contact links below.</p>
+
+      <h4>Authors</h4>
+      <p>The Android Observatory was written by <a href="https://binaryparadox.net/">Daniel McCarney</a> and <a href="http://www.ccsl.carleton.ca/~dbarrera/">David Barrera</a>. Questions or comments about the Observatory can be sent to <i>observatory at ccsl.carleton.ca</i></p>
+
+      <h4>Privacy Policy</h4>
+      <strong>APK Retention and Redistribution</strong>
+      <p>All APKs and files uploaded to the Android Observatory are stored indefinitely on servers located inside the <a href="https://ccsl.carleton.ca">Carleton Computer Security Lab</a>. APKs are kept for research purposes, and will never be shared, sold or distributed to any third-party. We do, however, make available the Android Observatory database which contains parsed-out metadata from uploaded APKs.</p>
+
+      <strong>Server Logs</strong>
+      <p>Apache web server logs are kept for server statistics and debugging purposes. If you wish to upload an APK and not have your IP address logged, you should use <a href="https://www.torproject.org">Tor</a> </p>
+
+      <strong>General Disclaimer</strong>
+      <p>The Android Observatory website and database are provided as-is, without any warranty. We run the Observatory as a free service in our spare time, and it could go away at any point.</p>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+  .submit {
+     background-color:#EEEEEE;
+     border:1px solid #777777;
+     display:inline-block;
+     color:black;
+     font-size:14px;
+     font-weight: bold;
+     padding:5px 14px;
+     cursor:pointer;
+  }
+  .help {
+    padding-bottom: 2em;
+    border-bottom: 1px solid #777777;
+  }
+  .legal {
+    padding-top: 2em;
+    border-top: 1px solid #777777;
+  }
+</style>
+  <div class="row">
+    <div class="span6 offset3 well">
+      <h3>Contribute an Application</h3>
+
+      <div class="help">
+        <p>Have some applications we don't? Upload your copies to the Observatory and help build a history of application data and signatures that benefits everyone.</p>
+        <p>Choose an APK file from your computer and click 'Upload' to submit the application to the Observatory.</p>
+      </div>
+
+      <form method='POST' enctype='multipart/form-data' action="{{ url_for('upload') }}">
+      <table class="table">
+        <tr>
+          <th>Choose an APK:</th>
+          <td>
+            <input type='file' name='apk'>
+          </td>
+          <td>
+            <input type='submit' name='submit' value='Upload' class="submit">
+          </td>
+        </tr>
+      </table>
+      </form>
+
+      <div class="legal">
+        <p>
+All APKs and files uploaded to the Android Observatory are stored indefinitely on servers located inside the <a href="https://ccsl.carleton.ca">Carleton Computer Security Lab</a>. APKs are kept for research purposes, and will never be shared, sold or distributed to any third-party. We do, however, make available the Android Observatory database which contains parsed-out metadata from uploaded APKs. Please see our <a href="/about">Privacy Policy</a> for more information on retention/distribution of your submission.</p>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

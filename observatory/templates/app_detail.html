@@ -1,0 +1,273 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <style>
+    .certdetails {
+      width: 50%;
+      float: left;
+    }
+    .hashtable {
+      word-wrap: break-word;
+      width: 100%;
+      table-layout: fixed;
+      font-size: 0.9em;
+    }
+    .hashtable th {
+      text-align: left;
+      width: 25%;
+    }
+    .certtable {
+      word-wrap: break-word;
+      width: 100%;
+      table-layout: fixed;
+      padding: 4px;
+    }
+    .certtable th {
+      text-align: left;
+      width: 16%;
+      padding: 4px;
+    }
+    .apptable {
+      word-wrap: break-word;
+      width: 100%;
+      table-layout: fixed;
+    }
+    .apptable th {
+      width: 25%
+    }
+    .appnameheader {
+      margin-bottom: 1em;
+    }
+    .filehashinfo {
+      font-size: 0.8em;
+      padding-top: 4px;
+    }
+  </style>
+
+  <div class="row well">
+    {% if app %}
+    <div class="span10 appnameheader">
+      <h2>
+        <span style="margin-right:0.3em; background-color: {{ app.source|src2colour }};">
+          &nbsp;
+          &nbsp;
+        </span>
+        {{ app.appname|default(app.pkgname, true) }}
+      </h2>
+
+      {% if flagged %}
+      <br/>
+      <div class="alert alert-error">
+        <strong>Warning:</strong>
+        This app has been signed by a Certificate also used to sign known malware.
+        See certificate details for more information.
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="span5">
+      <h4>App Info:</h4>
+
+      <table class="table apptable">
+        <tr>
+          <th>Package Name</th>
+          <td>
+            <a href="{{ url_for("app_search", searchby='pkg', q=app.pkgname) }}">
+              {{ app.pkgname }}
+            </a>
+          </td>
+        <tr>
+        <tr>
+          <th>Universal App. ID</th>
+          <td>
+            <code id="uappid">{{ app.uappid }}</code>
+            <div class="filehashinfo">
+              Universal App ID. Provides a unique ID for an application across app sources/versions. Computed using the package name as well as each of the certificates used to sign the app:
+              <i>SHA1(PKG_NAME + " " + certFP<sub>1</sub> + " " + ... + certFP<sub>n-1</sub> + " " + certFP<sub>n</sub>)</i>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Shared User ID String</th>
+          <td>
+            {% if app.shareduserid != "" %}
+              <a href="{{ url_for("app_search", searchby='suid', q=app.shareduserid) }}">
+                {{ app.shareduserid }}
+              </a>
+            {% else %}
+              None
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Version</th>
+          <td>
+            <div style="width:25%; float:left">
+             {{ app.version }}
+            </div>
+            <div style="width:75%; float:left"> 
+              <strong>Version Code:</strong> {{ app.versionCode }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>APK Source</th> <td>{{ app.source|src2str }}</td>
+        </tr>
+        <tr>
+          <th>Added On</th> <td>{{ app.timestamp|todate }}</td>
+        </tr>
+        <tr>
+          <th>External Analysis</th>
+          <td>
+            <div style="width:50%; float:left">
+              <a href="https://www.virustotal.com/en/file/{{ app.binhash }}/analysis/">VirusTotal</a>
+            </div>
+            <div style="width:50%; float:left">
+              <a href="http://andrototal.org/sample-analysis/hash/{{ app.binhash }}">AndroTotal</a>
+            </div>
+            <div class="filehashinfo">
+              Links to other APK analysis platforms will only work if the external platform has the APK in their database.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="span6">
+      <h4>App Hashes:</h4>
+
+      <table class="table hashtable">
+        <tr>
+          <th>APK</th>
+          <td>
+            <code>{{ app.binhash }}</code>
+            <div class="filehashinfo">
+              SHA1 Hash of the application binary. Computed as <i>SHA1(APP_APK_FILE)</i>.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th><i>classes.dex</i></th>
+          <td>
+            <code>{{ app.dexhash }}</code>
+            <div class="filehashinfo">
+              SHA1 Hash of the application dex extracted from the APK. Computed as <i>SHA1(APP_DEX_FILE)</i>.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th><i>resources.arsc</i></th>
+          <td>
+            <code>{{ app.reshash }}</code>
+            <div class="filehashinfo">
+              SHA1 Hash of the application resource file extracted from the APK. Computed as <i>SHA1(APP_RES_FILE)</i>.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th><i>AndroidManifest.xml</i></th>
+          <td>
+            <code>{{ app.manifesthash }}</code>
+            <div class="filehashinfo">
+              SHA1 Hash of the application manifest file extracted from the APK. Computed as <i>SHA1(APP_MANIFEST_FILE)</i>.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="row well">
+    <h4>Signed by:</h4>
+
+    <div class="span11">
+
+      {% for c in certs %}
+      <div class="certdetails">
+        <table class="table certtable">
+          <tr>
+            <th>
+              Fingerprint:
+            </th>
+            <td>
+                <a href="{{ url_for("cert_details", cert_id=c.fingerprint) }}">
+                  <code>{{ c.fingerprint|colonhex }}</code>
+                </a>
+            </td>
+          </tr>
+          <tr>
+            <th>Subject:</th>
+            <td>{{ c.subject }}</td>
+          </tr>
+          <tr>
+            <th>Issuer:</th>
+            <td>{{c.issuer }}</td>
+          </tr>
+        </table>
+      </div>
+     {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="row well">
+    <div class="span10">
+      <h4>Other sources:</h4>
+      <table class="table">
+      <tbody>
+        {% if not otherRepo %}
+          <tr><td>None</td></tr>
+        {% else %}
+          <thead>
+            <tr>
+              <th>&nbsp;</th><th>Name</th><th>Package</th><th>Version</th><th>Version Code</th><th>Added</th>
+            </tr>
+          </thead>
+        {% endif %}
+
+        {% for a in otherRepo %}
+        <tr>
+          <td style="background-color: {{ a.source|src2colour }};">
+            &nbsp;
+          </td>
+          <td>
+            <a href="{{ url_for('app_details', app_id=a.id) }}">
+              {{ a.appname }}
+            </a>
+          </td>
+          <td>
+            <a href="{{ url_for("app_search", searchby='pkg', q=a.pkgname) }}">
+              {{ a.pkgname }}
+            </a>
+          </td>
+          <td>{{ a.version }}</td>
+          <td>{{ a.versionCode }}</td>
+          <td>{{ a.timestamp|todate }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row well">
+    <div class="span10">
+      <h4>Permissions Requested</h4>
+
+      <table class="table">
+        {% if not permissions %}
+          <tr><td>None</td></tr>
+        {% endif %}
+
+        {% for p in permissions %}
+          <tr>
+            <td>{{ p.name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <h4>No Application found matching your query.</h4>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}
