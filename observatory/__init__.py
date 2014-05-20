@@ -146,7 +146,7 @@ def upload():
       flash("Invalid/corrupt upload.")
     else:
       sha1    = hashlib.sha1()
-      apkPath = "{0}/{1}".format(UPLOADED_APKS_DEST, filename)
+      apkPath = "{0}/{1}".format(app.config['UPLOADED_APKS_DEST'], filename)
 
       with open(apkPath, 'rb') as f:
         for chunk in iter(lambda: f.read(128 * sha1.block_size), b''):
