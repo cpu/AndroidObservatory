@@ -171,7 +171,7 @@ def stats():
   distinct_certs_by_print = get_count("SELECT COUNT(DISTINCT fingerprint) AS count FROM certs")
 
   import locale
-  locale.setlocale(locale.LC_ALL, 'en_US')
+  locale.setlocale(locale.LC_ALL, 'en_US.utf8')
 
   commafy = lambda i : locale.format("%d", i, grouping=True)
 
