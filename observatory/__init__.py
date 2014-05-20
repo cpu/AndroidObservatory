@@ -65,7 +65,7 @@ def app_search():
       apps = query_db('SELECT * FROM apps WHERE appname LIKE ?',
                         [appName])
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'results': apps }
     return jsonify(resp)
   else:
@@ -92,7 +92,7 @@ def cert_details(cert_id):
     apps = [None]
     pubkey = [None]
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'cert': cert, 'pubkey': pubkey, 'associatedApps': apps }
     return jsonify(resp)
   else:
@@ -117,7 +117,7 @@ def app_details(app_id):
       if badApps:
         flagged = True
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'app': app, 'permisisons': perms, 'certs': certs, 'otherInstances': otherRepo }
     return jsonify(resp)
   else:
