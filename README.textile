@@ -1,4 +1,43 @@
 h2. Android Observatory
 
-p. Initial (extremely rough) release of the Android Observatory server code. This code is *not supported* by the authors. It is offered *as is* without much in the way of documentation.
+p. Initial (extremely rough) release of the Android Observatory server code. This code is *not supported* by the authors. It is offered *as is*.
 
+h2. Setup
+
+# Install the Android SDK. Note the location you install the SDK
+** http://developer.android.com/sdk/index.html?hl=sk
+
+# Ensure the SDK location is on the system $PATH
+
+# Set up a virtualenv for the observatory code/dependencies
+** If you don't have virtualenv, but already have pip setup, run 'pip install virtualenv'
+## From the directory you cloned the observatory code run: virtualenv ./
+
+# Activate the venv
+## source bin/activate
+
+# Install the Observatory dependencies:
+## python setup.py install
+
+# Configure site-specific settings.
+## cp observatory/default_settings.py ./site_settings.py
+## export OBS_SETTINGS=PATH_TO/site_settings.py
+
+# Test the installation with the debug server:
+## python run.py
+## open a browser on localhost and connect to localhost:5000
+
+p. If you're planning on running a publicly accessible instance of the Observatory you will want to investigate a WSGI deployment. To aid in this process an example WSGI file is provided in 'observatory.wsgi.sample'. You will need to change '/var/www/observatory'/ to the directory you installed the observatory code to. Further details on WSGI (i.e. Apache integration) can be found here: https://code.google.com/p/modwsgi/
+
+h2. APK Upload Support
+
+p. Presently in order to allow user uploads you will have to manually configure a few files. This sucks. I know it sucks.
+
+# Edit the example watch_uploads.sh script
+## Change UPLOAD_DIR to the directory you set in site_settings.py for uploads to be placed
+## Change DIR to the directory you've installed the observatory source code
+## Optionally: add a Pushover API key and one or more device keys and uncomment the sendmessage line for pushover upload notifications
+
+# Make sure that watch_uploads.sh runs on machine start
+## If you're using a Ubuntu based system there is an example upstart script in observatory_watch.conf
+### You'll have to set UPLOAD_DIR, OBS_USER, and WATCH_SCRIPT before installing to /etc/init
