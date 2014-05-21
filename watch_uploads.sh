@@ -46,7 +46,12 @@ do
     #Compute the SHA1 hash of the file and lower case the hex digits to match the rest of the system
     hash=$(sha1sum $FILE | awk '{print $1}' | tr '[:lower:]' '[:upper:'])
     echo "hash: $hash" >> $LOGFILE
-    sendMessage "New APK uploaded: $f" "New Observatory Upload" "http://www.androidobservatory.org/apk/$hash"
+
+    #Uncomment the following sendMessage line to enable pushover support. You
+    #must also set up an APP_TOKEN and one or more $KEYS
+    #
+    #sendMessage "New APK uploaded: $f" "New Observatory Upload" "http://www.androidobservatory.org/apk/$hash"
+    #
 
     echo "Importing $f" >> $LOGFILE
 
