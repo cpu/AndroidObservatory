@@ -1,4 +1,0 @@
-h2. Android Observatory
-
-p. Initial (extremely rough) release of the Android Observatory server code. This code is *not supported* by the authors. It is offered *as is* without much in the way of documentation.
-
