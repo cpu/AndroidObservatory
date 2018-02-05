@@ -65,7 +65,7 @@ def app_search():
       apps = query_db('SELECT * FROM apps WHERE appname LIKE ?',
                         [appName])
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'results': apps }
     return jsonify(resp)
   else:
@@ -92,7 +92,7 @@ def cert_details(cert_id):
     apps = [None]
     pubkey = [None]
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'cert': cert, 'pubkey': pubkey, 'associatedApps': apps }
     return jsonify(resp)
   else:
@@ -117,7 +117,7 @@ def app_details(app_id):
       if badApps:
         flagged = True
 
-  if request.headers['Content-Type'] == 'application/json':
+  if request.headers.get('Content-Type') == 'application/json':
     resp = { 'app': app, 'permisisons': perms, 'certs': certs, 'otherInstances': otherRepo }
     return jsonify(resp)
   else:
@@ -146,7 +146,7 @@ def upload():
       flash("Invalid/corrupt upload.")
     else:
       sha1    = hashlib.sha1()
-      apkPath = "{0}/{1}".format(UPLOADED_APKS_DEST, filename)
+      apkPath = "{0}/{1}".format(app.config['UPLOADED_APKS_DEST'], filename)
 
       with open(apkPath, 'rb') as f:
         for chunk in iter(lambda: f.read(128 * sha1.block_size), b''):
@@ -171,7 +171,7 @@ def stats():
   distinct_certs_by_print = get_count("SELECT COUNT(DISTINCT fingerprint) AS count FROM certs")
 
   import locale
-  locale.setlocale(locale.LC_ALL, 'en_US')
+  locale.setlocale(locale.LC_ALL, 'en_US.utf8')
 
   commafy = lambda i : locale.format("%d", i, grouping=True)
 
